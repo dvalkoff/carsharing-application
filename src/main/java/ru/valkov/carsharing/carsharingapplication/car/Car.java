@@ -1,6 +1,10 @@
 package ru.valkov.carsharing.carsharingapplication.car;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.valkov.carsharing.carsharingapplication.user.AppUser;
 
 import javax.persistence.*;
@@ -9,7 +13,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Car implements Serializable {
     @Id
     @GeneratedValue(
@@ -34,12 +40,18 @@ public class Car implements Serializable {
     @JoinColumn(
             name = "owner_id", referencedColumnName = "id"
     )
+    @JsonBackReference(
+            value = "carsReference"
+    )
     private AppUser owner;
     @OneToOne(
             fetch = FetchType.LAZY
     )
     @JoinColumn(
             name = "current_rented_id", referencedColumnName = "id"
+    )
+    @JsonBackReference(
+            value = "rentedCar"
     )
     private AppUser currentRenter;
     private BigDecimal pricePerMinute;

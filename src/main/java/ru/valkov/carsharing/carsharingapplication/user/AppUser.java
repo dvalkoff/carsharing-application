@@ -1,15 +1,22 @@
 package ru.valkov.carsharing.carsharingapplication.user;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.valkov.carsharing.carsharingapplication.car.Car;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.math.BigDecimal;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class AppUser {
     @Id
     @GeneratedValue(
@@ -31,9 +38,15 @@ public class AppUser {
     @OneToMany(
             mappedBy = "owner"
     )
+    @JsonManagedReference(
+            value = "carsReference"
+    )
     private Set<Car> cars;
     @OneToOne(
             mappedBy = "currentRenter"
+    )
+    @JsonManagedReference(
+            value = "rentedCar"
     )
     private Car rentedCar;
 }
