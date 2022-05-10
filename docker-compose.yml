@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+
+  server:
+    container_name: carsharing_app
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres_container:5432/db"
+      SPRING_DATASOURCE_USERNAME: "app"
+      SPRING_DATASOURCE_PASSWORD: "app"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "create-drop"
+
+  postgres:
+    container_name: postgres_container
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "db"
+      POSTGRES_USER: "app"
+      POSTGRES_PASSWORD: "app"
+    ports:
+      - "5432:5432"
+    restart: always
