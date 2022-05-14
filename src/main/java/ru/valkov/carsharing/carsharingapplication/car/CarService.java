@@ -39,6 +39,7 @@ public class CarService {
 
     // business logic
     public List<Car> findClosestCarsByCoordinates(Double latitude, Double longitude) {
+        log.info("Trying to get closest cars to latitude = {} and longitude = {}", latitude, longitude);
         return carRepository.findClosest(latitude, longitude);
     }
 
@@ -107,6 +108,9 @@ public class CarService {
         Car car = this.getById(carId);
         AppUser owner = car.getOwner();
         if (!owner.getId().equals(ownerId)) {
+            throw new BadRequestException("User can not get back someone else's car");
+        }
+        if (car.getCarState() != CarState.FREE) {
             throw new BadRequestException("User can not get back someone else's car");
         }
         car.setCarState(CarState.SERVED);

@@ -12,7 +12,7 @@ public interface CarRepository extends JpaRepository<Car, Long> {
                     INNER JOIN app_user au on au.id = car.owner_id
                     LEFT JOIN car c on au.id = car.current_rented_id
                     WHERE car.car_state = 'FREE'
-                    ORDER BY sqrt(pow(car.latitude - :latitude, 2) + pow(car.longitude - :longitude, 2))
+                    ORDER BY sqrt(pow(abs(car.latitude - :latitude), 2) + pow(abs(car.longitude - :longitude), 2))
                     LIMIT 10
                     """,
             nativeQuery = true

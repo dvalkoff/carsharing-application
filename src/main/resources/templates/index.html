@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Home page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+</head>
+
+<body>
+
+<header class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Our carsharing</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup1"
+            aria-controls="navbarNavAltMarkup1" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup1">
+        <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link active" href="#">Главная <span class="sr-only">(current)</span></a>
+        </div>
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/me">Мой аккаунт</a>
+            <a class="nav-item nav-link" href="/logout">Выйти</a>
+        </div>
+    </div>
+</header>
+
+
+<div class="container text-light p-3">
+    <p>Автомобили поблизости:</p>
+
+    <tr th:each="car: ${cars}">
+        <div class="rounded bg-primary m-2 p-2">
+            <p>
+            <td th:text="'Name: ' + ${car.getName()}"></td>
+            </p>
+            <p>
+            <td class="h5" th:text="'Coordinates: ' + ${car.getLatitude()} + ' ' + ${car.getLongitude()}"></td>
+            </p>
+            <p>
+            <td th:text="'Owner: ' + ${car.getOwner().getName()}"></td>
+            </p>
+            <p>
+            <td th:text="'Owner\'s phone: ' + ${car.getOwner().getPhoneNumber()}"></td>
+            </p>
+            <p>
+            <td th:text="'Price per minute: ' + ${car.getPricePerMinute()}"></td>
+            <img th:src="@{bitcoin.svg}" height="40">
+            </p>
+            <td th:text="'Owner\'s phone: ' + ${car.get}"></td>
+            </p>
+            <p>
+        </div>
+    </tr>
+
+</div>
+</body>
+<script>
+    var x = document.getElementById("cars");
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showCars);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showCars(position) {
+        window.location.replace("http://localhost:8080/ui?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude);
+    }
+
+    window.onload = function () {
+        if (!window.location.href.includes("latitude=") || !window.location.href.includes("longitude=")) {
+            getLocation()
+        }
+    };
+</script>
+</html>
