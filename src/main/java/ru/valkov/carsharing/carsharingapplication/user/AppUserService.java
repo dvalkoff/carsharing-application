@@ -1,7 +1,6 @@
 package ru.valkov.carsharing.carsharingapplication.user;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +14,6 @@ import ru.valkov.carsharing.carsharingapplication.registration.token.Confirmatio
 import ru.valkov.carsharing.carsharingapplication.registration.token.ConfirmationTokenService;
 import ru.valkov.carsharing.carsharingapplication.shared.exceptions.NotFoundException;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

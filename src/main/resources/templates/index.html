@@ -8,6 +8,14 @@
     <title>Home page</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=bf867ef4-c40a-4dec-b186-09acc026d5b4" type="text/javascript"></script>
+    <script src="js/object_manager.js" type="text/javascript"></script>
+    <style>
+        html, body, #map {
+            width: 100%; height: 100%; padding: 0; margin: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -28,53 +36,23 @@
         </div>
     </div>
 </header>
-
-
-<div class="container text-light p-3">
-    <p>Автомобили поблизости:</p>
-
-    <tr th:each="car: ${cars}">
-        <div class="rounded bg-primary m-2 p-2">
-            <p>
-            <td th:text="'Name: ' + ${car.getName()}"></td>
-            </p>
-            <p>
-            <td class="h5" th:text="'Coordinates: ' + ${car.getLatitude()} + ' ' + ${car.getLongitude()}"></td>
-            </p>
-            <p>
-            <td th:text="'Owner: ' + ${car.getOwner().getName()}"></td>
-            </p>
-            <p>
-            <td th:text="'Owner\'s phone: ' + ${car.getOwner().getPhoneNumber()}"></td>
-            </p>
-            <p>
-            <td th:text="'Price per minute: ' + ${car.getPricePerMinute()}"></td>
-            <img th:src="@{bitcoin.svg}" height="40">
-            <p>
-        </div>
-    </tr>
+<div id="map">
 
 </div>
 </body>
-<script>
-    var x = document.getElementById("cars");
-
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showCars);
-        } else {
-            x.innerHTML = "Geolocation is not supported by this browser.";
-        }
+<style>
+    html, body, #map {
+        width: 100%; height: 100%; padding: 0; margin: 0;
     }
-
-    function showCars(position) {
-        window.location.replace("http://localhost:8080/ui?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude);
+    a {
+        color: #04b; /* Цвет ссылки */
+        text-decoration: none; /* Убираем подчеркивание у ссылок */
     }
-
-    window.onload = function () {
-        if (!window.location.href.includes("latitude=") || !window.location.href.includes("longitude=")) {
-            getLocation()
-        }
-    };
-</script>
+    a:visited {
+        color: #04b; /* Цвет посещённой ссылки */
+    }
+    a:hover {
+        color: #f50000; /* Цвет ссылки при наведении на нее курсора мыши */
+    }
+</style>
 </html>
