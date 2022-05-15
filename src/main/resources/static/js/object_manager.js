@@ -12,7 +12,7 @@ function showCars(position) {
     function init() {
         var myMap = new ymaps.Map('map', {
                 center: [position.coords.latitude, position.coords.longitude],
-                zoom: 10
+                zoom: 16
             }, {
                 searchControlProvider: 'yandex#search'
             }),

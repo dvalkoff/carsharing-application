@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppUser implements UserDetails {

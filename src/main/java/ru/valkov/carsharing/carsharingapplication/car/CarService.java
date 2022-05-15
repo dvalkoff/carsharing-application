@@ -2,6 +2,7 @@ package ru.valkov.carsharing.carsharingapplication.car;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.valkov.carsharing.carsharingapplication.shared.exceptions.BadRequestException;
 import ru.valkov.carsharing.carsharingapplication.shared.exceptions.NotFoundException;
@@ -45,8 +46,8 @@ public class CarService {
 
 
     @Transactional
-    public void rent(Long renterId, Long carId) {
-        AppUser renter = appUserService.getById(renterId);
+    public void rent(String email, Long carId) {
+        AppUser renter = appUserService.loadUserByUsername(email);
         if (renter.getCashAccount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BadRequestException("User has not enough valkoins to rent a car");
         }
@@ -79,11 +80,27 @@ public class CarService {
         takenCar.setRentedFrom(null);
     }
 
+    @Transactional
+    public void completeTheRent(String renterEmail, Double latitude, Double longitude) {
+        AppUser renter = appUserService.loadUserByUsername(renterEmail);
+        Car takenCar = renter.getRentedCar();
+
+        if (takenCar.getCarState() != CarState.IS_TAKEN) {
+            throw new BadRequestException("Can not complete the rent. Car is not taken.");
+        }
+        calculateAndWithdrawAndCreditPayment(renter, takenCar);
+        takenCar.setCarState(CarState.FREE);
+        takenCar.setLatitude(latitude);
+        takenCar.setLongitude(longitude);
+        takenCar.setCurrentRenter(null);
+        takenCar.setRentedFrom(null);
+    }
+
     private void calculateAndWithdrawAndCreditPayment(AppUser renter, Car takenCar) {
         LocalDateTime rentedFrom = takenCar.getRentedFrom();
         LocalDateTime rentedTo = LocalDateTime.now(Clock.systemUTC());
 
-        BigDecimal secondsSpentInTrip = new BigDecimal(ChronoUnit.SECONDS.between(rentedTo, rentedFrom));
+        BigDecimal secondsSpentInTrip = new BigDecimal(ChronoUnit.SECONDS.between(rentedFrom, rentedTo));
         BigDecimal minutesSpentInTrip = secondsSpentInTrip.divide(new BigDecimal(60), RoundingMode.UP);
         BigDecimal payment = takenCar.getPricePerMinute().multiply(minutesSpentInTrip);
 
