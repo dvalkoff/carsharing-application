@@ -10,13 +10,6 @@ import java.util.List;
 public class CarController {
     private final CarService carService;
 
-    @PostMapping(
-            path = "/{ownerId}/cars"
-    )
-    public void save(@PathVariable Long ownerId, @RequestBody Car car) {
-        carService.save(ownerId, car);
-    }
-
     @GetMapping(path = "/cars")
     public List<Car> getAll() {
         return carService.findAll();

@@ -2,10 +2,12 @@ package ru.valkov.carsharing.carsharingapplication.car;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.valkov.carsharing.carsharingapplication.shared.exceptions.BadRequestException;
 import ru.valkov.carsharing.carsharingapplication.shared.exceptions.NotFoundException;
+import ru.valkov.carsharing.carsharingapplication.ui.dto.CarRequest;
 import ru.valkov.carsharing.carsharingapplication.user.AppUser;
 import ru.valkov.carsharing.carsharingapplication.user.AppUserService;
 
@@ -110,25 +112,24 @@ public class CarService {
     }
 
     @Transactional
-    public void save(Long ownerId, Car car) {
+    public void save(Long ownerId, CarRequest carRequest) {
         AppUser owner = appUserService.getById(ownerId);
-        car.setId(null);
-        car.setCurrentRenter(null);
-        car.setRentedFrom(null);
+        Car car = new Car();
+        BeanUtils.copyProperties(carRequest, car);
         car.setOwner(owner);
         car.setCarState(CarState.SERVED);
         carRepository.save(car);
     }
 
     @Transactional
-    public void giveBackCarToOwner(Long ownerId, Long carId) {
+    public void giveBackCarToOwner(AppUser owner, Long carId) {
         Car car = this.getById(carId);
-        AppUser owner = car.getOwner();
+        Long ownerId = car.getOwner().getId();
         if (!owner.getId().equals(ownerId)) {
             throw new BadRequestException("User can not get back someone else's car");
         }
         if (car.getCarState() != CarState.FREE) {
-            throw new BadRequestException("User can not get back someone else's car");
+            throw new BadRequestException("Your request is being processed");
         }
         car.setCarState(CarState.SERVED);
         carRepository.save(car);

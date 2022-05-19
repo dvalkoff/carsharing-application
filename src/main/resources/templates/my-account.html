@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>My account</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+</head>
+
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<header class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Our carsharing</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup1"
+            aria-controls="navbarNavAltMarkup1" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup1">
+        <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" href="/ui">Главная</a>
+        </div>
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="#">Мой аккаунт <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="/logout">Выйти</a>
+        </div>
+    </div>
+</header>
+
+
+<div class="container">
+    <p class="display-4" th:text="${appUser.getName()}"></p>
+    <p th:text="'Email: ' + ${appUser.getEmail()}"></p>
+    <p th:text="'Phone number: ' + ${appUser.getPhoneNumber()}"></p>
+    <p>
+        <span th:text="'Cash account: ' + ${appUser.getCashAccount()}"></span>
+        <img src="../images/bitcoin.svg" height="40" alt="Valkoins">
+    </p>
+</div>
+
+<div class="container">
+    <a class="btn btn-success" href="/ui/cars/new">Add new car</a>
+    <p>Your cars:</p>
+    <div class="d-flex align-items-center justify-content-between rounded bg-primary m-2 p-2" th:each="car: ${cars}">
+        <div class="column">
+            <a class="h5 text-light" th:text="${car.getName()}"></a>
+            <p class="text-light" th:text="'Car number: ' + ${car.getCarNumber()}"></p>
+            <p class="subs text-light" >
+                <span th:text="'Price per minute: ' + ${car.getPricePerMinute()}"></span>
+                <img src="../images/bitcoin.svg" height="40" alt="Valkoins">
+            </p>
+            <p class="text-light" th:text="'State: ' + ${car.getCarState()}"></p>
+        </div>
+        <div class="column">
+            <form th:action="@{'/ui/cars/{id}'(id=${car.getId()})}" th:method="delete">
+                <input type="hidden" name="_method" value="delete"/>
+                <button class="btn btn-danger" type="submit" id="submitButton">Get back</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

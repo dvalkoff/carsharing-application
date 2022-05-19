@@ -7,3 +7,8 @@ VALUES (nextval('car_sequence_id'), 'NUM1', 'FREE', 55.12412412, 37.71829937819,
        (nextval('car_sequence_id'), 'NUM2', 'FREE', 51.12412412, 38.71829937819, 'Ferrari', 100, 1),
        (nextval('car_sequence_id'), 'NUM3', 'FREE', 60.12412412, 40.71829937819, 'Kia Rio', 140, 1),
        (nextval('car_sequence_id'), 'NUM4', 'FREE', 49.12412412, 37.71829937819, 'Supra', 200, 1);
+
+UPDATE car
+SET
+    car_state = 'FREE'
+WHERE car.name = 'Lada';

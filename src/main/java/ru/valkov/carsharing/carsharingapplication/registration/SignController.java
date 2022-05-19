@@ -32,7 +32,7 @@ public class SignController {
         try {
             signService.confirmAccount(token);
             return "registration/account-activated";
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             model.addAttribute("message", e.getMessage());
             return "error-page";
         }
@@ -44,7 +44,7 @@ public class SignController {
             signService.registerUser(appUserDetailsRequest);
             model.addAttribute("name", appUserDetailsRequest.getName());
             return "registration/confirm-email";
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             model.addAttribute("message", e.getMessage());
             return "error-page";
         }

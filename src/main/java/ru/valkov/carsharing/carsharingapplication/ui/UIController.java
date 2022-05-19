@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.valkov.carsharing.carsharingapplication.car.Car;
 import ru.valkov.carsharing.carsharingapplication.car.CarService;
+import ru.valkov.carsharing.carsharingapplication.ui.dto.CarRequest;
 import ru.valkov.carsharing.carsharingapplication.ui.dto.FeatureCollection;
+import ru.valkov.carsharing.carsharingapplication.user.AppUser;
+import ru.valkov.carsharing.carsharingapplication.user.AppUserService;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -25,6 +28,7 @@ import static java.util.Objects.isNull;
 public class UIController {
     private final CarService carService;
     private final UIService uiService;
+    private final AppUserService appUserService;
 
     @GetMapping
     public String home(Model model,
@@ -65,5 +69,35 @@ public class UIController {
     public RedirectView completeRent(Authentication authentication, @RequestParam Double latitude, @RequestParam Double longitude) {
         carService.completeTheRent(authentication.getName(), latitude, longitude);
         return new RedirectView("/ui");
+    }
+
+    @GetMapping("/me")
+    public String myAccount(Model model, Authentication authentication) {
+        AppUser appUser = appUserService.loadUserByUsername(authentication.getName());
+        model.addAttribute("appUser", appUser);
+        model.addAttribute("cars", appUser.getCars());
+        return "my-account";
+    }
+
+
+    @GetMapping("/cars/new")
+    public String addCar() {
+        return "add-car";
+    }
+
+    @PostMapping("/cars/new")
+    public String addCar(Authentication authentication, CarRequest car) {
+        AppUser appUser = appUserService.loadUserByUsername(authentication.getName());
+        carService.save(appUser.getId(), car);
+        return "redirect:/ui/me";
+    }
+
+    @DeleteMapping(path = "/cars/{carId}")
+    public String deleteCarById(Authentication authentication, @PathVariable Long carId, Model model) {
+        AppUser appUser = appUserService.loadUserByUsername(authentication.getName());
+        carService.giveBackCarToOwner(appUser, carId);
+        model.addAttribute("appUser", appUser);
+        model.addAttribute("cars", appUser.getCars());
+        return "my-account";
     }
 }
