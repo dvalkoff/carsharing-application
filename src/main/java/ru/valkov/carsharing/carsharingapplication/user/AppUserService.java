@@ -62,20 +62,7 @@ public class AppUserService implements UserDetailsService {
                 }
             }
         }
-
-        if (unexpectedUser.isEmpty()) {
-            AppUser savedUser = appUserRepository.save(appUser);
-            confirmationToken.setAppUser(savedUser);
-        } else if (unexpectedUser.get().isEnabled()
-                || anyTokenNotExpired(unexpectedUser.get())) {
-            throw new IllegalStateException(String.format("User with email %s already exists", appUser.getUsername()));
-        }
-        confirmationToken.setAppUser(unexpectedUser.get());
-
-
-
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-
         emailSender.sendEmail(appUser.getUsername(), EmailUtils.buildEmail(linkToConfirmToken));
     }
 
