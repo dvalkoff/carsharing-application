@@ -16,7 +16,13 @@ import java.time.LocalDateTime;
 public class ConfirmationToken {
     @Id
     @GeneratedValue(
-            strategy = GenerationType.IDENTITY
+            strategy = GenerationType.SEQUENCE,
+            generator = "confirmation_token_sequence_id"
+    )
+    @SequenceGenerator(
+            name = "confirmation_token_sequence_id",
+            sequenceName = "confirmation_token_sequence_id",
+            allocationSize = 1
     )
     private Long id;
 
